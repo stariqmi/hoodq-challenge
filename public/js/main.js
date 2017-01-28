@@ -1,13 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'materialize-css/js/materialize.js';
+import * as _ from 'lodash';
 
 // data
 import {addresses, coffeeShops} from './address.js';
+import {default as decidePreferrence} from './decide_preferrence.js';
 
 // components
 import Card from './components/card.js';
 import Select from './components/select.js';
+import Priority from './components/priority.js';
 
 let addressData = Object.assign({}, addresses);
 
@@ -25,6 +28,12 @@ class App extends React.Component {
       choice: {
         1: null,
         2: null
+      },
+      preferrence: false,
+      priority: {
+        workDistance: 0,
+        nearestCoffeeShop: 0,
+        nearbyDogPark: 0
       }
     };
   }
@@ -34,26 +43,33 @@ class App extends React.Component {
     let choice = {};
     choice[select_id] = value;
 
-    /*
-      Attempt to remove duplicate choice
-    */
-    // let data = this.state.data;
-    // delete data[select_id][value];
-
     this.setState(
       {
-        // data: data,
         choice: Object.assign({}, this.state.choice, choice)
       }
     );
+
+    let addr1 = addresses[this.state.choice[1]];
+    let addr2 = addresses[this.state.choice[2]];
+
+    this.setState({preferrence: decidePreferrence(addr1, addr2, this.state.priority)});
   }
 
   handlePriorityChange(e) {
-    console.log(e.target.id, e.target.value);
+
+    let priority = {};
+    priority[e.target.id] = parseInt(e.target.value);
+
+    let new_priority = Object.assign({}, this.state.priority, priority);
+    this.setState({priority: Object.assign({}, this.state.priority, priority)});
+
+    let addr1 = addresses[this.state.choice[1]];
+    let addr2 = addresses[this.state.choice[2]];
+
+    this.setState({preferrence: decidePreferrence(addr1, addr2, this.state.priority)});
   }
 
   render() {
-
     return (
       <div className="container">
         <div className="row">
@@ -65,40 +81,16 @@ class App extends React.Component {
 
           <div className="col s12 m6 l6">
             <Select addresses={addresses} name="Choice # 1" select="1" setChoice={this.selectChoiceChange.bind(this)}/>
-            {this.state.choice[1] ? <Card address={addresses[this.state.choice[1]]} /> : ''}
+            {this.state.choice[1] ? <Card address={addresses[this.state.choice[1]]} preferred={1 == this.state.preferrence}/> : ''}
           </div>
 
           <div className="col s12 m6 l6">
             <Select addresses={addresses} name="Choice # 2" select="2" setChoice={this.selectChoiceChange.bind(this)}/>
-            {this.state.choice[2] ? <Card address={addresses[this.state.choice[2]]} /> : ''}
+            {this.state.choice[2] ? <Card address={addresses[this.state.choice[2]]} preferred={2 == this.state.preferrence}/> : ''}
           </div>
         </div>
 
-        <div className="row">
-          <div className="input-field col s12 m4 l4">
-            <input
-              id="distance" type="number" className="distance priority"
-              min="1" max="3" step="1" onChange={this.handlePriorityChange}>
-            </input>
-            <label htmlFor="distance">Distance From Work</label>
-          </div>
-
-          <div className="input-field col s12 m4 l4">
-            <input
-              id="coffee_shop" type="number" className="coffee_shop priority"
-              min="1" max="3" step="1" onChange={this.handlePriorityChange}>
-            </input>
-            <label htmlFor="coffee_shop">Nearest Coffee Shop</label>
-          </div>
-
-          <div className="input-field col s12 m4 l4">
-            <input
-              id="nearby_dog_park" type="number" className="nearby_dog_park priority"
-              min="1" max="3" step="1" onChange={this.handlePriorityChange}>
-            </input>
-            <label htmlFor="nearby_dog_park">Nearby Dog Park</label>
-          </div>
-        </div>
+        <Priority handlePriorityChange={this.handlePriorityChange.bind(this)} />
       </div>
     );
   }

@@ -9,8 +9,9 @@ class Card extends React.Component {
 
   render() {
 
+    let classes = "card-panel darken-1 white-text " + ((this.props.preferred) ? "light-green" : "orange");
     return (
-        <div className="card-panel orange darken-1 white-text">
+        <div className={classes}>
           <span>
             <b>{this.props.address.address}</b>
           </span>
