@@ -58,29 +58,23 @@
 
 	__webpack_require__(178);
 
-	var _lodash = __webpack_require__(179);
+	var _address = __webpack_require__(179);
 
-	var _ = _interopRequireWildcard(_lodash);
-
-	var _address = __webpack_require__(181);
-
-	var _decide_preferrence = __webpack_require__(185);
+	var _decide_preferrence = __webpack_require__(180);
 
 	var _decide_preferrence2 = _interopRequireDefault(_decide_preferrence);
 
-	var _card = __webpack_require__(182);
+	var _card = __webpack_require__(181);
 
 	var _card2 = _interopRequireDefault(_card);
 
-	var _select = __webpack_require__(183);
+	var _select = __webpack_require__(182);
 
 	var _select2 = _interopRequireDefault(_select);
 
-	var _priority = __webpack_require__(184);
+	var _priority = __webpack_require__(185);
 
 	var _priority2 = _interopRequireDefault(_priority);
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -90,13 +84,11 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	// data
+	// data/utils
 
 
 	// components
 
-
-	var addressData = Object.assign({}, _address.addresses);
 
 	var App = function (_React$Component) {
 	  _inherits(App, _React$Component);
@@ -106,6 +98,7 @@
 
 	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
 
+	    _this.decide = _this.decide.bind(_this);
 	    _this.handlePriorityChange = _this.handlePriorityChange.bind(_this);
 
 	    _this.state = {
@@ -114,36 +107,28 @@
 	        2: _address.addresses
 	      },
 	      choice: {
-	        1: null,
-	        2: null
+	        1: 1,
+	        2: 2
 	      },
-	      preferrence: false,
+	      preferrence: 0,
 	      priority: {
-	        workDistance: 0,
-	        nearestCoffeeShop: 0,
-	        nearbyDogPark: 0
+	        workDistance: 1,
+	        nearestCoffeeShop: 1,
+	        nearbyDogPark: 1
 	      }
 	    };
 	    return _this;
 	  }
 
-	  // Receives state update from child
-
-
 	  _createClass(App, [{
 	    key: 'selectChoiceChange',
 	    value: function selectChoiceChange(select_id, value) {
 	      var choice = {};
-	      choice[select_id] = value;
+	      choice[select_id] = parseInt(value);
 
 	      this.setState({
 	        choice: Object.assign({}, this.state.choice, choice)
 	      });
-
-	      var addr1 = _address.addresses[this.state.choice[1]];
-	      var addr2 = _address.addresses[this.state.choice[2]];
-
-	      this.setState({ preferrence: (0, _decide_preferrence2.default)(addr1, addr2, this.state.priority) });
 	    }
 	  }, {
 	    key: 'handlePriorityChange',
@@ -152,9 +137,11 @@
 	      var priority = {};
 	      priority[e.target.id] = parseInt(e.target.value);
 
-	      var new_priority = Object.assign({}, this.state.priority, priority);
 	      this.setState({ priority: Object.assign({}, this.state.priority, priority) });
-
+	    }
+	  }, {
+	    key: 'decide',
+	    value: function decide() {
 	      var addr1 = _address.addresses[this.state.choice[1]];
 	      var addr2 = _address.addresses[this.state.choice[2]];
 
@@ -189,17 +176,34 @@
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'col s12 m6 l6' },
-	            _react2.default.createElement(_select2.default, { addresses: _address.addresses, name: 'Choice # 1', select: '1', setChoice: this.selectChoiceChange.bind(this) }),
-	            this.state.choice[1] ? _react2.default.createElement(_card2.default, { address: _address.addresses[this.state.choice[1]], preferred: 1 == this.state.preferrence }) : ''
+	            _react2.default.createElement(_select2.default, { addresses: _address.addresses, name: 'Choice # 1', select: '1', 'default': '0', setChoice: this.selectChoiceChange.bind(this) }),
+	            this.state.choice[1] ? _react2.default.createElement(_card2.default, { address: _address.addresses[this.state.choice[1]], id: '1', preferrence: this.state.preferrence }) : ''
 	          ),
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'col s12 m6 l6' },
-	            _react2.default.createElement(_select2.default, { addresses: _address.addresses, name: 'Choice # 2', select: '2', setChoice: this.selectChoiceChange.bind(this) }),
-	            this.state.choice[2] ? _react2.default.createElement(_card2.default, { address: _address.addresses[this.state.choice[2]], preferred: 2 == this.state.preferrence }) : ''
+	            _react2.default.createElement(_select2.default, { addresses: _address.addresses, name: 'Choice # 2', select: '2', 'default': '1', setChoice: this.selectChoiceChange.bind(this) }),
+	            this.state.choice[2] ? _react2.default.createElement(_card2.default, { address: _address.addresses[this.state.choice[2]], id: '2', preferrence: this.state.preferrence }) : ''
 	          )
 	        ),
-	        _react2.default.createElement(_priority2.default, { handlePriorityChange: this.handlePriorityChange.bind(this) })
+	        _react2.default.createElement(_priority2.default, { handlePriorityChange: this.handlePriorityChange.bind(this) }),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col s12 m12 l12' },
+	            _react2.default.createElement(
+	              'center',
+	              null,
+	              _react2.default.createElement(
+	                'a',
+	                { className: 'waves-effect waves-light btn orange darken-1', onClick: this.decide },
+	                'Decide'
+	              )
+	            )
+	          )
+	        )
 	      );
 	    }
 	  }]);
@@ -21670,6 +21674,372 @@
 
 /***/ },
 /* 179 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	/*
+	- Changing how data is stored
+	-- We should store the workDistance in a single metric, lets assume meters as integers
+	-- True/False for storing nearbyDogPark
+	-- Use integers to store coffee shops instead of strings
+	*/
+
+	var TIM_HORTONS = 0;
+	var STARBUCKS = 1;
+	var SECOND_CUP = 2;
+
+	var coffeeShops = {
+	  0: 'Tim Hortons',
+	  1: 'Starbucks',
+	  2: 'Second Cup'
+	};
+
+	var addresses = {
+	  0: {
+	    id: 0,
+	    address: '10 King st E, Toronto, ON',
+	    nearestCoffeeShop: 1,
+	    workDistance: 900,
+	    nearbyDogPark: true
+	  },
+	  1: {
+	    id: 1,
+	    address: '20 Queen st E, Toronto, ON',
+	    nearestCoffeeShop: 0,
+	    workDistance: 1000,
+	    nearbyDogPark: true
+	  },
+	  2: {
+	    id: 2,
+	    address: '30 Richmond st E, Toronto, ON',
+	    nearestCoffeeShop: 1,
+	    workDistance: 900,
+	    nearbyDogPark: false
+	  },
+	  3: {
+	    id: 3,
+	    address: '40 Front st, Toronto, ON',
+	    nearestCoffeeShop: 0,
+	    workDistance: 800,
+	    nearbyDogPark: true
+	  },
+	  4: {
+	    id: 4,
+	    address: '50 Adelaide st, Toronto, ON',
+	    nearestCoffeeShop: 1,
+	    workDistance: 10,
+	    nearbyDogPark: false
+	  },
+	  5: {
+	    id: 5,
+	    address: '60 Bay st, Toronto, ON',
+	    nearestCoffeeShop: 1,
+	    workDistance: 1200,
+	    nearbyDogPark: true
+	  },
+	  6: {
+	    id: 6,
+	    address: '70 Church st, Toronto, ON',
+	    nearestCoffeeShop: 0,
+	    workDistance: 700,
+	    nearbyDogPark: false
+	  },
+	  7: {
+	    id: 7,
+	    address: '80 Dundas st, Toronto, ON',
+	    nearestCoffeeShop: 2,
+	    workDistance: 1200,
+	    nearbyDogPark: true
+	  },
+	  8: {
+	    id: 8,
+	    address: '90 Yonge st, Toronto, ON',
+	    nearestCoffeeShop: 1,
+	    workDistance: 900,
+	    nearbyDogPark: false
+	  },
+	  9: {
+	    id: 9,
+	    address: '100 College st, Toronto, ON',
+	    nearestCoffeeShop: 1,
+	    workDistance: 800,
+	    nearbyDogPark: true
+	  }
+	};
+
+	exports.addresses = addresses;
+	exports.coffeeShops = coffeeShops;
+	exports.TIM_HORTONS = TIM_HORTONS;
+	exports.STARBUCKS = STARBUCKS;
+	exports.SECOND_CUP = SECOND_CUP;
+
+/***/ },
+/* 180 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	exports.default = function (addr1, addr2, priority) {
+	  if (addr1 == null || addr2 == null) {
+	    Materialize.toast('Please select 2 addresses for comparison', 3000, 'error-toast');
+	    return;
+	  }
+
+	  if (addr1.id === addr2.id) {
+	    Materialize.toast('Please select 2 different addresses for comparison', 3000, 'error-toast');
+	    return;
+	  }
+
+	  var choice_1_score = 0,
+	      choice_2_score = 0;
+
+	  var addrScore = calculateWorkAddrScore(addr1, addr2, priority[WORK_KEY]);
+	  var coffeeScore = calculateCoffeeShopScore(addr1, addr2, priority[COFFEE_KEY]);
+	  var dogParkScore = calculateDogParkScore(addr1, addr2, priority[DOG_PARK_KEY]);
+
+	  choice_1_score = addrScore[0] + coffeeScore[0] + dogParkScore[0];
+	  choice_2_score = addrScore[1] + coffeeScore[1] + dogParkScore[1];
+
+	  if (choice_1_score == choice_2_score) return 3;
+	  return choice_1_score > choice_2_score ? 1 : 2;
+	};
+
+	__webpack_require__(178);
+
+	var _address = __webpack_require__(179);
+
+	var WORK_KEY = 'workDistance';
+	var COFFEE_KEY = 'nearestCoffeeShop';
+	var DOG_PARK_KEY = 'nearbyDogPark';
+
+	function calculateWorkAddrScore(choice_1, choice_2, pvalue) {
+	  var score_1 = 0,
+	      score_2 = 0;
+	  if (choice_1[WORK_KEY] == choice_2[WORK_KEY]) {
+	    score_1 += pvalue;
+	    score_2 += pvalue;
+	  } else if (choice_1[WORK_KEY] < choice_2[WORK_KEY]) {
+	    score_1 += pvalue;
+	  } else {
+	    score_2 += pvalue;
+	  }
+	  return [score_1, score_2];
+	}
+
+	function calculateCoffeeShopScore(choice_1, choice_2, pvalue) {
+	  var score_1 = 0,
+	      score_2 = 0;
+	  if (choice_1[COFFEE_KEY] == choice_2[COFFEE_KEY]) {
+	    score_1 += pvalue;
+	    score_2 += pvalue;
+	  } else if (choice_1[COFFEE_KEY] == _address.TIM_HORTONS) {
+	    score_1 += pvalue;
+	  } else if (choice_2[COFFEE_KEY] == _address.TIM_HORTONS) {
+	    score_2 += pvalue;
+	  }
+
+	  return [score_1, score_2];
+	}
+
+	function calculateDogParkScore(choice_1, choice_2, pvalue) {
+	  var score_1 = 0,
+	      score_2 = 0;
+	  if (choice_1[DOG_PARK_KEY] == choice_2[DOG_PARK_KEY]) {
+	    score_1 += pvalue;
+	    score_2 += pvalue;
+	  } else if (choice_1[DOG_PARK_KEY]) {
+	    score_1 += pvalue;
+	  } else if (choice_2[DOG_PARK_KEY]) {
+	    score_2 += pvalue;
+	  }
+
+	  return [score_1, score_2];
+	}
+
+/***/ },
+/* 181 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _address = __webpack_require__(179);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Card = function (_React$Component) {
+	  _inherits(Card, _React$Component);
+
+	  function Card() {
+	    _classCallCheck(this, Card);
+
+	    return _possibleConstructorReturn(this, (Card.__proto__ || Object.getPrototypeOf(Card)).call(this));
+	  }
+
+	  _createClass(Card, [{
+	    key: 'getColorClass',
+	    value: function getColorClass() {
+	      var color_class = void 0;
+	      switch (this.props.preferrence) {
+	        case 0:
+	          color_class = 'orange';
+	          break;
+	        case parseInt(this.props.id):
+	          color_class = 'light-green';
+	          break;
+	        case 3:
+	          color_class = 'yellow darken-2';
+	          break;
+	        default:
+	          color_class = 'orange';
+	          break;
+	      }
+	      return color_class;
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+
+	      var classes = "card-panel darken-1 white-text " + this.getColorClass();
+	      return _react2.default.createElement(
+	        'div',
+	        { className: classes },
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          _react2.default.createElement(
+	            'b',
+	            null,
+	            this.props.address.address
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'Distance from work: ',
+	          this.props.address.workDistance
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'Nearest Coffee Shop: ',
+	          _address.coffeeShops[this.props.address.nearestCoffeeShop]
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'Nearby Dog Park: ',
+	          this.props.address.nearbyDogPark ? 'Yes' : 'No'
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Card;
+	}(_react2.default.Component);
+
+	exports.default = Card;
+
+/***/ },
+/* 182 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _lodash = __webpack_require__(183);
+
+	var _ = _interopRequireWildcard(_lodash);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Select = function (_React$Component) {
+	  _inherits(Select, _React$Component);
+
+	  function Select() {
+	    _classCallCheck(this, Select);
+
+	    var _this = _possibleConstructorReturn(this, (Select.__proto__ || Object.getPrototypeOf(Select)).call(this));
+
+	    _this.handleSelectChange = _this.handleSelectChange.bind(_this);
+
+	    _this.state = {
+	      choice: 0
+	    };
+	    return _this;
+	  }
+
+	  _createClass(Select, [{
+	    key: 'handleSelectChange',
+	    value: function handleSelectChange(e) {
+	      this.props.setChoice(this.props.select, e.target.value);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var options = _.map(this.props.addresses, function (address, index) {
+	        return _react2.default.createElement(
+	          'option',
+	          { key: index, value: index },
+	          address.address
+	        );
+	      });
+
+	      return _react2.default.createElement(
+	        'select',
+	        { className: 'browser-default', onChange: this.handleSelectChange, defaultValue: this.props.default },
+	        options
+	      );
+	    }
+	  }]);
+
+	  return Select;
+	}(_react2.default.Component);
+
+	exports.default = Select;
+
+/***/ },
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global, module) {/**
@@ -38757,10 +39127,10 @@
 	  }
 	}.call(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(180)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(184)(module)))
 
 /***/ },
-/* 180 */
+/* 184 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -38776,259 +39146,7 @@
 
 
 /***/ },
-/* 181 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	/*
-	- Changing how data is stored
-	-- We should store the workDistance in a single metric, lets assume meters as integers
-	-- True/False for storing nearbyDogPark
-	-- Use integers to store coffee shops instead of strings
-	*/
-
-	var coffeeShops = {
-	  0: 'Tim Hortons',
-	  1: 'Starbucks',
-	  2: 'Second Cup'
-	};
-
-	var addresses = {
-	  0: {
-	    id: 0,
-	    address: '10 King st E, Toronto, ON',
-	    nearestCoffeeShop: 1,
-	    workDistance: 900,
-	    nearbyDogPark: true
-	  },
-	  1: {
-	    id: 1,
-	    address: '20 Queen st E, Toronto, ON',
-	    nearestCoffeeShop: 0,
-	    workDistance: 1000,
-	    nearbyDogPark: true
-	  },
-	  2: {
-	    id: 2,
-	    address: '30 Richmond st E, Toronto, ON',
-	    nearestCoffeeShop: 1,
-	    workDistance: 900,
-	    nearbyDogPark: false
-	  },
-	  3: {
-	    id: 3,
-	    address: '40 Front st, Toronto, ON',
-	    nearestCoffeeShop: 0,
-	    workDistance: 800,
-	    nearbyDogPark: true
-	  },
-	  4: {
-	    id: 4,
-	    address: '50 Adelaide st, Toronto, ON',
-	    nearestCoffeeShop: 1,
-	    workDistance: 10,
-	    nearbyDogPark: false
-	  },
-	  5: {
-	    id: 5,
-	    address: '60 Bay st, Toronto, ON',
-	    nearestCoffeeShop: 1,
-	    workDistance: 1200,
-	    nearbyDogPark: true
-	  },
-	  6: {
-	    id: 6,
-	    address: '70 Church st, Toronto, ON',
-	    nearestCoffeeShop: 0,
-	    workDistance: 700,
-	    nearbyDogPark: false
-	  },
-	  7: {
-	    id: 7,
-	    address: '80 Dundas st, Toronto, ON',
-	    nearestCoffeeShop: 2,
-	    workDistance: 1200,
-	    nearbyDogPark: true
-	  },
-	  8: {
-	    id: 8,
-	    address: '90 Yonge st, Toronto, ON',
-	    nearestCoffeeShop: 1,
-	    workDistance: 900,
-	    nearbyDogPark: false
-	  },
-	  9: {
-	    id: 9,
-	    address: '100 College st, Toronto, ON',
-	    nearestCoffeeShop: 1,
-	    workDistance: 800,
-	    nearbyDogPark: true
-	  }
-	};
-
-	exports.addresses = addresses;
-	exports.coffeeShops = coffeeShops;
-
-/***/ },
-/* 182 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _address = __webpack_require__(181);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Card = function (_React$Component) {
-	  _inherits(Card, _React$Component);
-
-	  function Card() {
-	    _classCallCheck(this, Card);
-
-	    return _possibleConstructorReturn(this, (Card.__proto__ || Object.getPrototypeOf(Card)).call(this));
-	  }
-
-	  _createClass(Card, [{
-	    key: 'render',
-	    value: function render() {
-
-	      var classes = "card-panel darken-1 white-text " + (this.props.preferred ? "light-green" : "orange");
-	      return _react2.default.createElement(
-	        'div',
-	        { className: classes },
-	        _react2.default.createElement(
-	          'span',
-	          null,
-	          _react2.default.createElement(
-	            'b',
-	            null,
-	            this.props.address.address
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          'Distance from work: ',
-	          this.props.address.workDistance
-	        ),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          'Nearest Coffee Shop: ',
-	          _address.coffeeShops[this.props.address.nearestCoffeeShop]
-	        ),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          'Nearby Dog Park: ',
-	          this.props.address.nearbyDogPark ? 'Yes' : 'No'
-	        )
-	      );
-	    }
-	  }]);
-
-	  return Card;
-	}(_react2.default.Component);
-
-	exports.default = Card;
-
-/***/ },
-/* 183 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _lodash = __webpack_require__(179);
-
-	var _ = _interopRequireWildcard(_lodash);
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Select = function (_React$Component) {
-	  _inherits(Select, _React$Component);
-
-	  function Select() {
-	    _classCallCheck(this, Select);
-
-	    var _this = _possibleConstructorReturn(this, (Select.__proto__ || Object.getPrototypeOf(Select)).call(this));
-
-	    _this.handleSelectChange = _this.handleSelectChange.bind(_this);
-
-	    _this.state = {
-	      choice: 0
-	    };
-	    return _this;
-	  }
-
-	  _createClass(Select, [{
-	    key: 'handleSelectChange',
-	    value: function handleSelectChange(e) {
-	      this.props.setChoice(this.props.select, e.target.value);
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var options = _.map(this.props.addresses, function (address, index) {
-	        return _react2.default.createElement(
-	          'option',
-	          { key: index, value: index },
-	          address.address
-	        );
-	      });
-
-	      return _react2.default.createElement(
-	        'select',
-	        { className: 'browser-default', onChange: this.handleSelectChange },
-	        options
-	      );
-	    }
-	  }]);
-
-	  return Select;
-	}(_react2.default.Component);
-
-	exports.default = Select;
-
-/***/ },
-/* 184 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -39071,7 +39189,7 @@
 	          { className: "input-field col s12 m4 l4" },
 	          _react2.default.createElement("input", {
 	            id: "workDistance", type: "number", className: "workDistance priority",
-	            min: "1", max: "3", step: "1", "default": "0", onChange: this.props.handlePriorityChange }),
+	            min: "1", max: "3", step: "1", defaultValue: "1", onChange: this.props.handlePriorityChange }),
 	          _react2.default.createElement(
 	            "label",
 	            { htmlFor: "workDistance" },
@@ -39083,7 +39201,7 @@
 	          { className: "input-field col s12 m4 l4" },
 	          _react2.default.createElement("input", {
 	            id: "nearestCoffeeShop", type: "number", className: "nearestCoffeeShop priority",
-	            min: "1", max: "3", step: "1", "default": "0", onChange: this.props.handlePriorityChange }),
+	            min: "1", max: "3", step: "1", defaultValue: "1", onChange: this.props.handlePriorityChange }),
 	          _react2.default.createElement(
 	            "label",
 	            { htmlFor: "nearestCoffeeShop" },
@@ -39095,7 +39213,7 @@
 	          { className: "input-field col s12 m4 l4" },
 	          _react2.default.createElement("input", {
 	            id: "nearbyDogPark", type: "number", className: "nearbyDogPark priority",
-	            min: "1", max: "3", step: "1", "default": "0", onChange: this.props.handlePriorityChange }),
+	            min: "1", max: "3", step: "1", defaultValue: "1", onChange: this.props.handlePriorityChange }),
 	          _react2.default.createElement(
 	            "label",
 	            { htmlFor: "nearbyDogPark" },
@@ -39110,65 +39228,6 @@
 	}(_react2.default.Component);
 
 	exports.default = Priority;
-
-/***/ },
-/* 185 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	exports.default = function (addr1, addr2, priority) {
-	  if (addr1 == null || addr2 == null || addr1 == addr2) return;
-
-	  var choice_1 = addr1;
-	  var choice_1_score = 0;
-
-	  var choice_2 = addr2;
-	  var choice_2_score = 0;
-
-	  _.forEach(priority, function (value, key) {
-	    switch (key) {
-	      case 'workDistance':
-	        if (choice_1.workDistance == choice_2.workDistance) {
-	          choice_1_score += value;
-	          choice_2_score += value;
-	        } else if (choice_1.workDistance < choice_2.workDistance) {
-	          choice_1_score += value;
-	        } else {
-	          choice_2_score += value;
-	        }
-	        break;
-	      case 'nearestCoffeeShop':
-	        if (choice_1.nearestCoffeeShop == choice_2.nearestCoffeeShop) {
-	          choice_1_score += value;
-	          choice_2_score += value;
-	        } else if (choice_1.nearestCoffeeShop == 0) {
-	          choice_1_score += value;
-	        } else if (choice_2.nearestCoffeeShop == 0) {
-	          choice_2_score += value;
-	        }
-	        break;
-	      case 'nearbyDogPark':
-	        if (choice_1.nearbyDogPark == choice_2.nearbyDogPark) {
-	          choice_1_score += value;
-	          choice_2_score += value;
-	        } else if (choice_1.nearbyDogPark) {
-	          choice_1_score += value;
-	        } else if (choice_2.nearbyDogPark) {
-	          choice_2_score += value;
-	        }
-	        break;
-	    }
-	  });
-
-	  var preferrence = choice_1_score > choice_2_score ? 1 : 2;
-
-	  return preferrence;
-	};
 
 /***/ }
 /******/ ]);

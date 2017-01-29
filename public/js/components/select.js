@@ -26,10 +26,10 @@ class Select extends React.Component {
     });
 
     return (
-        <select className="browser-default" onChange={this.handleSelectChange}>
+        <select className="browser-default" onChange={this.handleSelectChange} defaultValue={this.props.default}>
           { options }
         </select>
-      
+
     );
   }
 }

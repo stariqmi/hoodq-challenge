@@ -7,9 +7,28 @@ class Card extends React.Component {
     super();
   }
 
+  getColorClass() {
+    let color_class;
+    switch (this.props.preferrence) {
+      case 0:
+        color_class = 'orange';
+        break;
+      case parseInt(this.props.id):
+        color_class = 'light-green';
+        break;
+      case 3:
+        color_class = 'yellow darken-2';
+        break;
+      default:
+        color_class = 'orange';
+        break;
+    }
+    return color_class;
+  }
+
   render() {
 
-    let classes = "card-panel darken-1 white-text " + ((this.props.preferred) ? "light-green" : "orange");
+    let classes = "card-panel darken-1 white-text " + this.getColorClass();
     return (
         <div className={classes}>
           <span>

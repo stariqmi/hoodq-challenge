@@ -26,3 +26,7 @@
 .preferred {
   background-color: #7cb342 !important;
 }
+
+.error-toast {
+  background-color: #e53935;
+}

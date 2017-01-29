@@ -5,6 +5,10 @@
 -- Use integers to store coffee shops instead of strings
 */
 
+const TIM_HORTONS = 0;
+const STARBUCKS = 1;
+const SECOND_CUP = 2;
+
 const coffeeShops = {
   0: 'Tim Hortons',
   1: 'Starbucks',
@@ -84,4 +88,4 @@ const addresses =  {
   }
 }
 
-export {addresses, coffeeShops}
+export {addresses, coffeeShops, TIM_HORTONS, STARBUCKS, SECOND_CUP}
